@@ -1,11 +1,15 @@
+import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
-import { Button } from "./components/ui/button";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   return (
     <div>
       <Navbar />
-      <Button>Hello world</Button>
+      <main className=" min-h[70vh]">
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   );
 }
