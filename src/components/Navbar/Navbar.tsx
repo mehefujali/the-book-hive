@@ -94,38 +94,40 @@ const Navbar = () => {
             animate="visible"
             exit="exit"
             variants={menuVariants}
-            className="fixed right-0 top-0 z-50 flex h-full w-64 flex-col bg-white p-6 shadow-xl dark:bg-gray-900 md:hidden"
+            className="fixed right-0 top-0 z-50 flex h-full w-64 flex-col  bg-transparent p-6 shadow-xl  md:hidden"
           >
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white">
-                Menu
-              </h2>
-              <button
-                onClick={toggleMenu}
-                className="rounded-md p-2 text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700"
-                aria-label="Close Menu"
-              >
-                <HiX size={28} />
-              </button>
-            </div>
-            <nav className="mt-8 flex flex-col gap-6">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.title}
-                  to={link.path}
-                  onClick={toggleMenu} // Close menu on link click
-                  className={({ isActive }) =>
-                    `rounded-md p-2 text-lg font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                      isActive
-                        ? "bg-blue-50 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`
-                  }
+            <div className=" bg-white p-4 dark:bg-gray-900">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+                  Menu
+                </h2>
+                <button
+                  onClick={toggleMenu}
+                  className="rounded-md p-2 text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700"
+                  aria-label="Close Menu"
                 >
-                  {link.title}
-                </NavLink>
-              ))}
-            </nav>
+                  <HiX size={28} />
+                </button>
+              </div>
+              <nav className="mt-8 flex flex-col gap-6">
+                {navLinks.map((link) => (
+                  <NavLink
+                    key={link.title}
+                    to={link.path}
+                    onClick={toggleMenu} // Close menu on link click
+                    className={({ isActive }) =>
+                      `rounded-md p-2 text-lg font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                        isActive
+                          ? "bg-blue-50 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300"
+                          : "text-gray-700 dark:text-gray-300"
+                      }`
+                    }
+                  >
+                    {link.title}
+                  </NavLink>
+                ))}
+              </nav>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
