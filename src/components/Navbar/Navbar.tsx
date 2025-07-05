@@ -7,7 +7,7 @@ import { HiMenuAlt3, HiX } from "react-icons/hi";
 const navLinks = [
   { title: "Home", path: "/" },
   { title: "All Books", path: "/all-books" },
-  { title: "Add Books", path: "/add-books" },
+  { title: "Add Books", path: "/create-book" },
   { title: "Borrow Summary", path: "/borrow-summary" },
 ];
 

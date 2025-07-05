@@ -1,29 +1,52 @@
-import React from "react";
+import type { IBook } from "@/types/types";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { useGetBooksQuery, useDeleteBookMutation } from "@/Redux/api/apiSlice";
 import BookCard from "@/components/BookCard/BookCard";
-import { useGetBookQuery } from "@/Redux/api/apiSlice";
-
-interface IBook {
-  _id: string;
-  title: string;
-  author: string;
-  genre: string;
-  isbn: string;
-  copies: number;
-  available: boolean;
-}
+import { FaPlus } from "react-icons/fa";
 
 const AllBooks: React.FC = () => {
+  const {
+    data: booksResponse,
+    isLoading,
+    isError,
+  } = useGetBooksQuery(undefined);
+  const [deleteBook] = useDeleteBookMutation();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
   const handleDelete = (id: string) => {
-    console.log(`Deleting book with id: ${id}`);
-    alert(`Book with id ${id} would be deleted.`);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You can't undo this action!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setDeletingId(id);
+        try {
+          await deleteBook(id).unwrap();
+          Swal.fire(
+            "Deleted!",
+            "The book has been successfully deleted.",
+            "success"
+          );
+        } catch {
+          Swal.fire("Error!", "There was an issue deleting the book.", "error");
+        } finally {
+          setDeletingId(null);
+        }
+      }
+    });
   };
 
-  const { data: books, isLoading, isError } = useGetBookQuery();
+  const books = booksResponse?.data || [];
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900">
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 pb-8 sm:flex-row">
           <div className="text-center sm:text-left">
@@ -43,11 +66,30 @@ const AllBooks: React.FC = () => {
           </NavLink>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {books?.data?.map((book: IBook) => (
-            <BookCard key={book._id} book={book} onDelete={handleDelete} />
-          ))}
-        </div>
+        {isLoading && (
+          <p className="text-center py-10 font-semibold">Loading Books...</p>
+        )}
+        {isError && (
+          <p className="text-center py-10 font-semibold text-red-500">
+            Failed to load books.
+          </p>
+        )}
+
+        {!isLoading && !isError && (
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {books.map((book: IBook) => (
+              <BookCard
+                key={book._id}
+                book={book}
+                onDelete={handleDelete}
+                deletingId={deletingId}
+                // Placeholder functions for Edit and Borrow
+                onEdit={(b) => alert(`Editing: ${b.title}`)}
+                onBorrow={(b) => alert(`Borrowing: ${b.title}`)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
