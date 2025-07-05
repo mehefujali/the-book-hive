@@ -17,7 +17,7 @@ export const apiSlice = createApi({
 
     getBookById: builder.query({
       query: (id) => `/books/${id}`,
-      providesTags: (result, error, id) => [{ type: "Books", id }],
+      providesTags: (id) => [{ type: "Books", id }],
     }),
 
     createBook: builder.mutation({
@@ -35,10 +35,7 @@ export const apiSlice = createApi({
         method: "PUT",
         body: updatedData,
       }),
-      invalidatesTags: (result, error, { id }) => [
-        { type: "Books", id },
-        "Books",
-      ],
+      invalidatesTags: ({ id }) => [{ type: "Books", id }, "Books"],
     }),
 
     deleteBook: builder.mutation({
